@@ -1,3 +1,100 @@
+.box{
+    position:relative;
+    border-radius:3px;
+    background:#ffffff;
+    border-top:3px solid #d2d6de;
+    margin-bottom:20px;
+    width:100%;
+    box-shadow:0 1px 1px rgba(0,0,0,0.1)
+}
+
+.box-body{
+    max-height:300px;
+    overflow:auto
+}
+
+.box-body:before,.box-footer:before,.box-header:after,.box-body:after,.box-footer:after{
+    content:" ";display:table
+}
+.box-header:after,.box-body:after,.box-footer:after{
+    clear:both
+}
+.box-header{
+    color:#444;display:block;padding:10px;position:relative
+}
+.box-header.with-border{
+    border-bottom:1px solid #f4f4f4
+}
+.collapsed-box .box-header.with-border{
+    border-bottom:none
+}
+.box-header>.fa,.box-header>.glyphicon,.box-header>.ion,.box-header .box-title{
+    display:inline-block;font-size:18px;margin:0;line-height:1
+}
+.box-header>.fa,.box-header>.glyphicon,.box-header>.ion{
+    margin-right:5px
+}
+.box-header>.box-tools{
+    position:absolute;right:10px;top:5px
+}
+.box-header>.box-tools [data-toggle="tooltip"]{
+    position:relative
+}
+.box-header>.box-tools.pull-right .dropdown-menu{
+    right:0;left:auto
+}
+.btn-box-tool{
+    padding:5px;font-size:12px;background:transparent;color:#97a0b3
+}
+.open .btn-box-tool,.btn-box-tool:hover{
+    color:#606c84
+}
+.btn-box-tool.btn:active{
+    box-shadow:none
+}
+.box-body{
+    border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:3px;border-bottom-left-radius:3px;padding:10px
+}
+.no-header .box-body{
+    border-top-right-radius:3px;border-top-left-radius:3px
+}
+.box-body>.table{
+    margin-bottom:0
+}
+.box-body .fc{
+    margin-top:5px
+}
+.box-body .full-width-chart{
+    margin:-19px
+}
+.box-body.no-padding .full-width-chart{
+    margin:-9px
+}
+.box-body .box-pane{
+    border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:3px
+}
+.box-body .box-pane-right{
+    border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:3px;border-bottom-left-radius:0
+}
+.box-tools{
+    position:absolute;right:10px;top:5px
+}
+.box-header>.box-tools [data-toggle="tooltip"]{
+    position:relative
+}
+.box-header>.box-tools.pull-right .dropdown-menu{
+    right:0;left:auto
+}
+.btn-box-tool{
+    padding:5px;font-size:12px;background:transparent;color:#97a0b3
+}
+.box-title{
+    display:inline-block;font-size:18px;margin:0;line-height:1
+}
+.box-header>.fa,.box-header>.glyphicon,.box-header>.ion{
+    margin-right:5px
+}
+
 /*three way mode switch*/
 .switch-field {
     font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
