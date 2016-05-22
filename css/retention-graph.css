@@ -135,15 +135,26 @@
 }
 
 .switch-field input:checked + label {
-    background-color: #A5DC86;
+    background-color: #23527c;
+    color : #FFFFFF;
+    font-weight : 700;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-
-.switch-field label:first-of-type {
+/*
+.switch-field label:first-child {
     border-radius: 4px 0 0 4px;
 }
 
-.switch-field label:last-of-type {
+.switch-field label:last-child {
     border-radius: 0 4px 4px 0;
+}
+*/
+.retention-thead, .retention-date{
+    background-color: #cfcfcf;
+    font-weight: 700;
+}
+
+.days{
+    cursor: pointer;
 }
