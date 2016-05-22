@@ -163,14 +163,17 @@ $.fn.Retention = function (options) {
             else
                 return "days";
         })
+        .attr("style", function (d) {
+            return "background-color :" + shadeColor("", d);
+        })
         .append("div")
         .attr("data-toggle", "tooltip")
         .attr("title", function (d, i) {
             if(i != 0 && i != 1 && d != 0)
             return tooltipData(d, i);
         })
-        .text(function (d) {
-            return d;
+        .text(function (d, i) {
+            return d + (i > 1 ? "%" : "");
         });
 
     $('[data-toggle="tooltip"]').tooltip(); //calling bootstrap tooltip
