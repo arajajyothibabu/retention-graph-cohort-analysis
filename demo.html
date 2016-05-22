@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Retention Graph using D3 and Bootstrap</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/retention-graph.css" rel="stylesheet">
 </head>
 <body>
 
 <h1>Retention Graph using D3.js and Bootstrap</h1>
 
-<div id="demo">
-
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div id="demo">
+        </div>
+    </div>
+    <div class="col-md-1"></div>
 </div>
 
 </body>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/tooltip.js" type="text/javascript"></script>
+<script src="js/d3.v3.min.js" type="text/javascript"></script>
+<script src="js/rentention-graph.js" type="text/javascript"></script>
+<script>
+    $("#demo").Retention(options);
+</script>
 </html>

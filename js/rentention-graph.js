@@ -36,14 +36,14 @@
 function getRows(data){
     var rows = [];
     var keys = Object.keys(data);
-    var days;
-    var percentDays;
+    var days = [];
+    var percentDays = [];
     for(var key in keys){
         if(data.hasOwnProperty(keys[key])) {
             days = data[keys[key]];
-            percentDays.push(days[0]);
-            for(var i = 1; i < days.length; i++){
-                percentDays.push(Math.round(days[i] * 100) / 100);
+            percentDays.push(keys[key]);
+            for(var i = 0; i < days.length; i++){
+                percentDays.push(Math.round((days[i]/days[0] * 100) * 100) / 100);
             }
             rows.push(percentDays);
             percentDays = [];
@@ -64,7 +64,7 @@ function shadeColor(color, percent) { //#
 }
 
 function tooltipData(count, dayIndex){
-    return  count + " of users were active after " + (dayIndex - 1) + dayIndex == 2 ? "day" : " days";
+    return  (count + "% of users were active after " + (dayIndex - 1)) + (dayIndex == 2 ? "day" : " days");
 }
 
 var options = {
@@ -72,7 +72,7 @@ var options = {
         "22-05-2016" : [200, 10, 20, 30, 40, 10, 20, 20],
         "23-05-2016" : [300, 200, 150, 50, 20, 20, 90, 100 ],
         "24-05-2016" : [200, 110, 150, 50, 10, 20, 30, 40],
-        "25-05-2016" : [100, 200, 150, 50, 20, 20, 60, 10]
+        "25-05-2016" : [100, 10, 10, 50, 20, 20, 60, 10]
     },
     startDate : "",
     endDate : "",
@@ -80,17 +80,17 @@ var options = {
 };
 
 $.fn.Retention = function (options) {
-    var _ = this;
     var graphTitle = options.title || "Retention Graph";
+    console.log(graphTitle);
     var data = options.data || null;
 
-    var container = d3.select(this).append("div")
+    var container = d3.select(this[0]).append("div")
         .attr("class", "box");
 
     var header = container.append("div")
         .attr("class", "box-header with-border");
     var title = header.append("p")
-        .attr("box-title")
+        .attr("class", "box-title")
         .text(graphTitle);
     var controls = header.append("div")
         .attr("class", "box-tools");
@@ -103,7 +103,8 @@ $.fn.Retention = function (options) {
     var switches = switchContainer.selectAll("span")
         .data(switchData)
         .enter()
-        .append("input")
+        .append("span");
+    var radios =  switches.append("input")
         .attr("type", "radio")
         .attr("name", "switch")
         .attr("id", function (d) {
@@ -114,6 +115,9 @@ $.fn.Retention = function (options) {
         });
     var labelsForSwitches = switches.append("label")
         .attr("for", function (d) {
+            return d;
+        })
+        .text(function (d) {
             return d;
         });
 
@@ -168,5 +172,7 @@ $.fn.Retention = function (options) {
         .text(function (d) {
             return d;
         });
+
+    $('[data-toggle="tooltip"]').tooltip(); //calling bootstrap tooltip
 
 };
