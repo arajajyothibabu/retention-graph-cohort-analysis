@@ -63,12 +63,16 @@ function shadeColor(color, percent) { //#
     return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
 
+function tooltipData(count, dayIndex){
+    return  count + " of users were active after " + (dayIndex - 1) + dayIndex == 2 ? "day" : " days";
+}
+
 var options = {
     data : {
-        "22-05-2016" : [ ],
-        "23-05-2016" : [ ],
-        "24-05-2016" : [ ],
-        "25-05-2016" : [ ]
+        "22-05-2016" : [200, 10, 20, 30, 40, 10, 20, 20],
+        "23-05-2016" : [300, 200, 150, 50, 20, 20, 90, 100 ],
+        "24-05-2016" : [200, 110, 150, 50, 10, 20, 30, 40],
+        "25-05-2016" : [100, 200, 150, 50, 20, 20, 60, 10]
     },
     startDate : "",
     endDate : "",
@@ -154,6 +158,12 @@ $.fn.Retention = function (options) {
                 return "retention-date";
             else
                 return "days";
+        })
+        .append("div")
+        .attr("data-toggle", "tooltip")
+        .attr("title", function (d, i) {
+            if(i != 0 && i != 1 && d != 0)
+            return tooltipData(d, i);
         })
         .text(function (d) {
             return d;
