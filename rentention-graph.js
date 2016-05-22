@@ -31,6 +31,27 @@
 
 }));*/
 
+
+
+function getRows(data){
+    var rows = [];
+    var keys = Object.keys(data);
+    var days;
+    var percentDays;
+    for(var key in keys){
+        if(data.hasOwnProperty(keys[key])) {
+            days = data[keys[key]];
+            percentDays.push(days[0]);
+            for(var i = 1; i < days.length; i++){
+                percentDays.push(Math.round(days[i] * 100) / 100);
+            }
+            rows.push(percentDays);
+            percentDays = [];
+        }
+    }
+    return rows;
+}
+
 var options = {
     data : {
         "22-05-2016" : [ ],
