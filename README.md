@@ -1,5 +1,5 @@
-# Retention graph using D3 (Cohort analysis)
-Retention graph (Cohort Analysis) using D3.js and Bootstrap ```(Beta*)```
+# Retention graph (Cohort analysis)
+Retention graph (Cohort Analysis) using Bootstrap ```(Beta*)```
 
 
 ###Demo:
