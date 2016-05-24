@@ -124,7 +124,7 @@ $.fn.Retention = function (options) {
 
     var graphTitle = options.title || "Retention Graph";
     var data = options.data || null;
-    if(data == null)
+    if(data == null || data.length == 0)
         return;
 
     var container = $('<div />', {
