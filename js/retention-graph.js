@@ -63,8 +63,8 @@ function shadeColor(color, percent) { //#
     return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
 
-function tooltipData(count, dayIndex){
-    return  (count + "% of users were active after " + (dayIndex - 1)) + (dayIndex == 2 ? "day" : " days");
+function tooltipData(date, total, count, dayIndex){
+    return  "Of " + total + " users came on " + moment(date, "DD-MM-YYYY").format("MMM DD") + ", " + (count + "% were active on " + moment(date, "DD-MM-YYYY").add(dayIndex-1, "days").format("MMM DD"));
 }
 
 function getHeaderData(){
@@ -97,7 +97,7 @@ function generateRow(data){
             'data-toggle' : "tooltip",
             title : function () {
                 if(key > 1 && data[key] != 0)
-                    return  tooltipData(date[key], key);
+                    return  tooltipData(date, count, data[key], key);
             },
             text : function () {
                 return data[key] + (key > 1 ? "%" : "");
