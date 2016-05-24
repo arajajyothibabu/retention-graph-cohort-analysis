@@ -3,7 +3,7 @@ Retention graph (Cohort Analysis) using D3.js and Bootstrap ```(Beta*)```
 
 
 ###Demo:
-![alt tag](http://imgur.com/CsroqSE)
+![alt tag](http://i.imgur.com/uJQTG1Q.png)
 
 ###Input options:
 ```
