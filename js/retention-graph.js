@@ -82,7 +82,7 @@ function getHeaderData(){
     return headerData;
 }
 
-function generateRow(data){
+function generateRow(data, cellClickEvent){
     var row = $('<tr />');
     var date = data[0];
     var count = data[1] || 1;
@@ -93,8 +93,10 @@ function generateRow(data){
             class : className,
             style : function () {
                 if(key > 1)
-                    return "background-color :" + shadeColor("", data[key]);
-            }
+                    return "cursor: pointer; background-color :" + shadeColor("", data[key]);
+            },
+        }).click(function (){
+            cellClickEvent != null ? cellClickEvent(date, 1) : null
         }).appendTo(row);
         div = $('<div />', {
             'data-toggle' : "tooltip",
@@ -121,7 +123,10 @@ var options = {
     endDate : "5-05-2016",
     dateFormat : "DD-MM-YYYY", //if not iso date given
     dateDisplayFormat : "MMM DD YYYY",
-    title : "Retention Analysis"
+    title : "Retention Analysis",
+    cellClickEvent : function(date, day){
+        window.location = "https://www.google.com?date=" + date + "$day="+ day;
+    }
 };
 
 $.fn.Retention = function (options) {
@@ -130,6 +135,7 @@ $.fn.Retention = function (options) {
     var data = options.data || null;
     var dateFormat = options.dateFormat || null;
     var dateDisplayFormat = options.dateDisplayFormat || "MMM DD YYYY";
+    var cellClickEvent = typeof options.cellClickEvent == 'function' ? options.cellClickEvent : null;
     if(data == null || Object.keys(data).length == 0)
         return;
 
@@ -202,7 +208,7 @@ $.fn.Retention = function (options) {
     var rowsData = getRows(data, dateFormat, dateDisplayFormat);
 
     for(var row in rowsData){
-        generateRow(rowsData[row]).appendTo(tbody);
+        generateRow(rowsData[row], cellClickEvent).appendTo(tbody);
     }
 
     $('[data-toggle="tooltip"]').tooltip(); //calling bootstrap tooltip
