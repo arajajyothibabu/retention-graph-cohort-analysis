@@ -33,15 +33,18 @@
 
 
 
-function getRows(data){
+function getRows(data, dateFormat, dateDisplayFormat){
     var rows = [];
     var keys = Object.keys(data);
     var days = [];
     var percentDays = [];
+    var date;
     for(var key in keys){
         if(data.hasOwnProperty(keys[key])) {
             days = data[keys[key]];
-            percentDays.push(keys[key]);
+            date = dateFormat ? moment(keys[key], dateFormat).format(dateDisplayFormat) : moment(keys[key]).format(dateDisplayFormat);
+            console.log(moment(keys[key], dateFormat).format(dateDisplayFormat), moment(keys[key]).format(dateDisplayFormat));
+            percentDays.push(date);
             for(var i = 0; i < days.length; i++){
                 percentDays.push(i > 0 ? Math.round((days[i]/days[0] * 100) * 100) / 100 : days[i]);
             }
@@ -64,7 +67,7 @@ function shadeColor(color, percent) { //#
 }
 
 function tooltipData(date, total, count, dayIndex){
-    return  "Of " + total + " users came on " + moment(date, "DD-MM-YYYY").format("MMM DD") + ", " + (count + "% were active on " + moment(date, "DD-MM-YYYY").add(dayIndex-1, "days").format("MMM DD"));
+    return  "Of " + total + " users came on " + moment(date).format("MMM DD") + ", " + (count + "% were active on " + moment(date).add(dayIndex-1, "days").format("MMM DD"));
 }
 
 function getHeaderData(){
@@ -116,7 +119,8 @@ var options = {
     },
     startDate : "",
     endDate : "",
-    dateFormat : "",
+    dateFormat : "DD-MM-YYYY", //if not iso date given
+    dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis"
 };
 
@@ -124,6 +128,8 @@ $.fn.Retention = function (options) {
 
     var graphTitle = options.title || "Retention Graph";
     var data = options.data || null;
+    var dateFormat = options.dateFormat || null;
+    var dateDisplayFormat = options.dateDisplayFormat || "MMM DD YYYY";
     if(data == null || Object.keys(data).length == 0)
         return;
 
@@ -193,7 +199,7 @@ $.fn.Retention = function (options) {
 
     var tbody = $('<tbody />').appendTo(table);
 
-    var rowsData = getRows(data);
+    var rowsData = getRows(data, dateFormat, dateDisplayFormat);
 
     for(var row in rowsData){
         generateRow(rowsData[row]).appendTo(tbody);
