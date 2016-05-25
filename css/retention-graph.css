@@ -141,15 +141,15 @@
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-/*
-.switch-field label:first-child {
+
+.switch-field label:first-of-type {
     border-radius: 4px 0 0 4px;
 }
 
-.switch-field label:last-child {
+.switch-field label:last-of-type {
     border-radius: 0 4px 4px 0;
 }
-*/
+
 .retention-thead, .retention-date{
     background-color: #cfcfcf;
     font-weight: 700;
