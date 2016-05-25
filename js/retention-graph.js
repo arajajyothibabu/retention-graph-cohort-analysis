@@ -71,7 +71,7 @@ function tooltipData(date, total, count, dayIndex){
 }
 
 function getHeaderData(){
-    var headerDataAppender = $("input:checked").val(); //changes by selection of switch
+    var headerDataAppender = $("input[name='retention-switch']:checked").val(); //changes by selection of switch
     var headerData = [];
     for(var i = 0; i < 9; i++){
         if(i == 0)
@@ -117,8 +117,8 @@ var options = {
         "24-05-2016" : [200, 110, 150, 50, 10, 20, 30, 40],
         "25-05-2016" : [100, 10, 10, 50, 20, 20, 60, 0]
     },
-    startDate : "",
-    endDate : "",
+    startDate : "22-05-2016",
+    endDate : "5-05-2016",
     dateFormat : "DD-MM-YYYY", //if not iso date given
     dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis"
