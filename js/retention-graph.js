@@ -42,8 +42,8 @@ function getRows(data, dateFormat, dateDisplayFormat){
     for(var key in keys){
         if(data.hasOwnProperty(keys[key])) {
             days = data[keys[key]];
-            date = dateFormat ? moment(keys[key], dateFormat).format(dateDisplayFormat) : moment(keys[key]).format(dateDisplayFormat);
-            console.log(moment(keys[key], dateFormat).format(dateDisplayFormat), moment(keys[key]).format(dateDisplayFormat));
+            date = (dateDisplayFormat != null) ? (dateFormat ? moment(keys[key], dateFormat).format(dateDisplayFormat) : moment(keys[key]).format(dateDisplayFormat)) : keys[key];
+            //console.log(moment(keys[key], dateFormat).format(dateDisplayFormat), moment(keys[key]).format(dateDisplayFormat));
             percentDays.push(date);
             for(var i = 0; i < days.length; i++){
                 percentDays.push(i > 0 ? Math.round((days[i]/days[0] * 100) * 100) / 100 : days[i]);
@@ -134,7 +134,7 @@ $.fn.Retention = function (options) {
     var graphTitle = options.title || "Retention Graph";
     var data = options.data || null;
     var dateFormat = options.dateFormat || null;
-    var dateDisplayFormat = options.dateDisplayFormat || "MMM DD YYYY";
+    var dateDisplayFormat = options.dateDisplayFormat || null;
     var cellClickEvent = typeof options.cellClickEvent == 'function' ? options.cellClickEvent : null;
     if(data == null || Object.keys(data).length == 0)
         return;
