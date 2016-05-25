@@ -19,7 +19,9 @@ Retention graph (Cohort Analysis) using Bootstrap ```(Beta*)```
     dateFormat : "DD-MM-YYYY", //if not iso date given as input
     dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis",
-    cellClickEvent : closure(date, dayCount) //
+    cellClickEvent : function(date, day){
+        //your closure with date=" + date + "&day="+ day;
+    }
 }
 ```
 
