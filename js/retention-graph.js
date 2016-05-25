@@ -1,7 +1,7 @@
 /**
  * Created by Araja Jyothi Babu on 22-May-16.
  */
-/*
+
 (function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -18,18 +18,71 @@
 
     Retention = (function() {
 
-        function Retention(element, options) {
+        var instanceId = 0;
+
+        function Retention(element, settings) {
+
+            var _ = this, dataSettings;
+
+            _.defaults = {
+                data : {},
+                startDate : null,
+                endDate : null,
+                inputDateFormat : null,
+                dateDisplayFormat: null,
+                cellClickEvent : function (d, i) {
+                    //do something
+                }
+            };
+
+            _.initials = {
+                //TODO:
+            };
+
+            $.extend(_, _.initials);
+
+            dataSettings = $(element).data('retention') || {};
+
+            _.options = $.extend({}, _.defaults, dataSettings, settings);
+
+            _.originalSettings = _.options;
+
+            if (typeof document.mozHidden !== 'undefined') {
+                _.hidden = 'mozHidden';
+                _.visibilityChange = 'mozvisibilitychange';
+            } else if (typeof document.webkitHidden !== 'undefined') {
+                _.hidden = 'webkitHidden';
+                _.visibilityChange = 'webkitvisibilitychange';
+            }
+
+            _.instanceId = instanceId++;
+
+            _.init(true);
 
         }
+
         return Retention;
 
     }());
 
     $.fn.retention = function() {
-
+        var _this = this,
+            options = arguments[0],
+            args = Array.prototype.slice.call(arguments, 1),
+            length = _this.length,
+            i = 0,
+            ret;
+        for (i; i < length; i++) {
+            if (typeof options == 'object' || typeof options == 'undefined')
+                _this[i].retention = new Retention(_[i], options);
+            else
+                ret = _this[i].retention[options].apply(_this[i].retention, args);
+            if (typeof ret != 'undefined') return ret;
+        }
+        return _;
     };
 
-}));*/
+}));
 
 
 
