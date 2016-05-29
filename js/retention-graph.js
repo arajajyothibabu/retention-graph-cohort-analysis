@@ -58,6 +58,64 @@
         }
     };
 
+    Retention.prototype.getContainer = function () {
+        var container = $('<div />', {
+            class : 'box'
+        }).appendTo(this);
+
+        var header = $('<div />', {
+            class : "box-header with-border"
+        }).appendTo(container);
+
+        var title = $('<p />', {
+            class : "box-title",
+            text : graphTitle
+        }).appendTo(header);
+
+        var controls = $('<div />', {
+            class : "box-tools"
+        }).appendTo(header);
+
+        var dateRange = $('<input />',{
+            id : "date-range",
+            type : "hidden"
+        }).appendTo(controls); //TODO: implement daterangepicker
+
+        var switchContainer = $('<div />', {
+            class : "switch-field"
+        }).appendTo(controls);
+
+        var switchData = ["day", "week", "month"];
+
+        for(var key in switchData){
+            $('<input />', {
+                type : "radio",
+                name : "retention-switch",
+                id : switchData[key],
+                value : switchData[key]
+            }).appendTo(switchContainer);
+            $('<label />', {
+                for : switchData[key],
+                text : switchData[key] + "s" //appending s for "days"
+            }).appendTo(switchContainer);
+        }
+        return container;
+    };
+
+    Retention.prototype.getBody = function () {
+        var body = $('<div />', {
+            class : "box-body"
+        });
+        return body;
+    };
+
+    Retention.prototype.getTable = function () {
+        var table = $('<table />', {
+            class : "table table-bordered text-center"
+        });
+        return table;
+    };
+
     Retention.prototype.generateOptions = function () {
         var options = {};
         var keys = Object.keys(this.defaults);
@@ -120,15 +178,15 @@
         var count = data[1] || 1; //to handle divisionBy0
         var td, div;
         for(var key in data){
-            var className = key > 0 ? "retention-cell" : "retention-date";
+            var className = key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date";
             td = $('<td />', {
                 class : className,
                 style : function () {
                     if(key > 1)
                         return "background-color :" + _this.shadeColor("", data[key]);
-                }
-            }).click(function (){
-                _this.cellClickEvent != null ? _this.cellClickEvent(date, 1) : null;
+                },
+                date : date,
+                day : key-1
             }).appendTo(row);
             div = $('<div />', {
                 'data-toggle' : "tooltip",
