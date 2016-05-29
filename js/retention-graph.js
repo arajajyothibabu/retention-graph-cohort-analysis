@@ -259,7 +259,11 @@
         }
     };
 
-    //some dom queries
+    //some dom Events
+    $('td.clickable').click(function () {
+        this.options.cellClickEvent(this.attr(date), this.attr(day));
+    });
+
 
 }));
 
