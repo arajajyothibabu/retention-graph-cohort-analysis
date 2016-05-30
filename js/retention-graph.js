@@ -139,10 +139,13 @@
                 type : "radio",
                 name : "retention-switch",
                 id : switchData[key],
-                value : switchData[key]
+                value : switchData[key],
+                disabled : ""
             }).appendTo(switchContainer);
             $('<label />', {
                 for : switchData[key],
+                style : "cursor:not-allowed",
+                title : "Feature yet to implement",
                 text : switchData[key] + "s" //appending s for "days"
             }).appendTo(switchContainer);
         }
@@ -192,8 +195,9 @@
 
     Retention.prototype.sortData = function () {
         const ordered = {};
+        var _this = this;
         Object.keys(this.options.data).sort().forEach(function(key) {
-            ordered[key] = this.options.data[key];
+            ordered[key] = _this.options.data[key];
         });
         return ordered;
     };
