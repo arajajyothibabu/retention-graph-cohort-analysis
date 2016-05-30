@@ -15,5 +15,6 @@ var options = {
     title : "Retention Analysis",
     cellClickEvent : function(date, day){
         window.location = "https://www.google.com?date=" + date + "$day="+ day;
-    }
+    },
+    enableInactive: true
 };

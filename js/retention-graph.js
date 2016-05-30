@@ -36,7 +36,8 @@
                     //do something
                 },
                 showEmptyDataMessage : true,
-                customEmptyDataMessage : null
+                customEmptyDataMessage : null,
+                enableInactive : false
             };
 
             _this.options = _this.generateOptions();
@@ -66,13 +67,13 @@
 
         var container = this.getContainer();
 
-        $("input[value='day']").attr("checked", ""); //default days checked
+        $("input[value='Day']").attr("checked", ""); //default days checked
 
         var body = this.getBody();
         body.appendTo(container);
 
         if(this.proceedFlag){
-            this.start(body);
+            this.start(body, true);
         }else{
             this.end(body);
         }
@@ -88,7 +89,7 @@
         }
     };
 
-    Retention.prototype.start = function (body) {
+    Retention.prototype.start = function (body, isActive) {
         $(body).html('');
         var table = this.getTable();
         table.appendTo(body);
@@ -100,7 +101,7 @@
         var rowsData = this.getRows();
 
         for(var row in rowsData){
-            this.generateRow(rowsData[row]).appendTo(tbody);
+            this.generateRow(rowsData[row], isActive).appendTo(tbody);
         }
 
     };
@@ -115,7 +116,7 @@
         }).appendTo(container);
 
         var title = $('<p />', {
-            class : "box-title",
+            class : "retention-title box-title",
             text : this.options.title
         }).appendTo(header);
 
@@ -123,16 +124,21 @@
             class : "box-tools"
         }).appendTo(header);
 
+        if(this.options.enableInactive) {
+            var retentionSwitch = this.getInactiveSwitch();
+            retentionSwitch.appendTo(controls);
+        }
+
         var dateRange = $('<input />',{
             id : "date-range",
             type : "hidden"
         }).appendTo(controls); //TODO: implement daterangepicker
 
-        var switchContainer = $('<div />', {
+        var switchContainer = $('<a />', {
             class : "switch-field"
         }).appendTo(controls);
 
-        var switchData = ["day", "week", "month"];
+        var switchData = ["Day", "Week", "Month"];
 
         for(var key in switchData){
             $('<input />', {
@@ -152,9 +158,30 @@
         return container;
     };
 
+    Retention.prototype.getInactiveSwitch = function () {
+        var _this = this, body;
+        var switchInput = $('<a />', {
+            type : 'button',
+            class : 'retention-inactive btn btn-warning',
+            text : 'Inactive'
+        }).click(function(){
+            body = $('.retention-body');
+            if($(this).hasClass('retention-inactive')){
+                _this.start(body, false);
+                $(this).addClass('retention-active btn-success').removeClass('retention-inactive btn-warning').text("Active");
+                $('.retention-title').text("Inactive User Analysis");
+            }else{
+                _this.start(body, true);
+                $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
+                $('.retention-title').text("Active User Analysis");
+            }
+        });
+        return switchInput;
+    };
+
     Retention.prototype.getBody = function () {
         var body = $('<div />', {
-            class : "box-body"
+            class : "retention-body box-body"
         });
         return body;
     };
@@ -235,23 +262,24 @@
     Retention.prototype.tooltipData = function(date, total, count, dayIndex, isActive){
         var fromDate = this.formatDate(date);//.format("MMM DD");
         var toDate =  moment(this.formatDate(date), this.options.dateDisplayFormat).add(dayIndex-1, "days").format(this.options.dateDisplayFormat);
-        var active = isActive? " active " : " in-active ";
-        return  "Of " + total + " users came on " + fromDate + ", " + (count + " were active on " + toDate);
+        var active = isActive? " active " : " inactive ";
+        return  "Of " + total + " users came on " + fromDate + ", " + (count + " were " + active + " on " + toDate);
     };
 
     Retention.prototype.getHeaderData = function(){
         var headerDataAppender = $("input[name='retention-switch']:checked").val(); //changes by selection of switch
         var headerData = [];
         for(var i = 0; i < 9; i++){
-            headerData.push(i > 0? (headerDataAppender + (i-1)) : ("Date \\ " + headerDataAppender + "s"));
+            headerData.push(i > 0? (headerDataAppender + "-" + (i-1)) : ("Date \\ " + headerDataAppender + "s"));
         }
         return headerData;
     };
 
-    Retention.prototype.generateRow = function(data){
+    Retention.prototype.generateRow = function(data, isActive){
         var _this = this;
         var row = $('<tr />');
         var date = data[0];
+        var dayCount = 0;
         var count = data[1] || 1; //to handle divisionBy0
         var td, div;
         for(var key in data){
@@ -259,8 +287,10 @@
             td = $('<td />', {
                 class : className,
                 style : function () {
-                    if(key > 1)
-                        return "background-color :" + _this.shadeColor("", _this.getPercentage(count, data[key]));
+                    if(key > 1) {
+                        dayCount = isActive? data[key] : count-data[key];
+                        return "background-color :" + _this.shadeColor("", _this.getPercentage(count, dayCount));
+                    }
                 },
                 date : date,
                 day : key-1
@@ -268,11 +298,13 @@
             div = $('<div />', {
                 'data-toggle' : "tooltip",
                 title : function () {
-                    if(key > 1 && data[key] != 0)
-                        return  _this.tooltipData(date, count, data[key], key, true);
+                    if(key > 1) {
+                        dayCount = isActive? data[key] : count-data[key];
+                        return _this.tooltipData(date, count, dayCount, key, isActive);
+                    }
                 },
                 text : function () {
-                    return key > 1 ? (_this.getPercentage(count, data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
+                    return key > 1 ? (_this.getPercentage(count, isActive? data[key] : count-data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
                 }
             }).appendTo(td);
         }
