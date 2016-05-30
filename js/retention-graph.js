@@ -42,6 +42,15 @@
 
             _this.proceedFlag = Object.keys(_this.options.data).length;
 
+            //some dom Events
+            $(document).ready(function(){
+                $('td.clickable').click(function () {
+                    _this.options.cellClickEvent($(this).attr('date'), $(this).attr('day'));
+                });
+
+                $('[data-toggle="tooltip"]').tooltip(); //calling bootstrap tooltip
+            });
+
             _this.init();
 
         }
@@ -258,12 +267,6 @@
             throw new Error("Need data to show retention graph..!");
         }
     };
-
-    //some dom Events
-    $('td.clickable').click(function () {
-        this.options.cellClickEvent(this.attr(date), this.attr(day));
-    });
-
 
 }));
 
