@@ -35,7 +35,8 @@
                 cellClickEvent : function (d, i) {
                     //do something
                 },
-                showEmptyDataMessage : false
+                showEmptyDataMessage : true,
+                customEmptyDataMessage : null
             };
 
             _this.options = this.generateOptions();
@@ -79,7 +80,8 @@
         if(this.options.showEmptyDataMessage){
             $('<h3 />', {
                 align : 'center',
-                style : 'color:red'
+                style : 'color:red',
+                text : this.options.customEmptyDataMessage ? this.options.customEmptyDataMessage : "No data available to show..!"
             }).appendTo(body);
         }
     };
@@ -198,7 +200,7 @@
     };
 
     Retention.prototype.formatDate = function(date){
-        return (this.options.dateDisplayFormat != null) ? (this.options.dateFormat ? moment(date, this.options.dateFormat).format(this.options.dateDisplayFormat) : moment(date).format(this.options.dateDisplayFormat)) : date;
+        return (this.options.dateDisplayFormat != null) ? (this.options.inputDateFormat ? moment(date, this.options.inputDateFormat).format(this.options.dateDisplayFormat) : moment(date).format(this.options.dateDisplayFormat)) : date;
     };
 
     Retention.prototype.getPercentage = function (total, value) {
@@ -217,7 +219,9 @@
     };
 
     Retention.prototype.tooltipData = function(date, total, count, dayIndex){
-        return  "Of " + total + " users came on " + moment(date).format("MMM DD") + ", " + (count + " were active on " + moment(date).add(dayIndex-1, "days").format("MMM DD"));
+        var fromDate = this.formatDate(date);//.format("MMM DD");
+        var toDate =  moment(this.formatDate(date), this.options.dateDisplayFormat).add(dayIndex-1, "days").format(this.options.dateDisplayFormat);
+        return  "Of " + total + " users came on " + fromDate + ", " + (count + " were active on " + toDate);
     };
 
     Retention.prototype.getHeaderData = function(){
@@ -253,7 +257,7 @@
                         return  _this.tooltipData(date, count, data[key], key);
                 },
                 text : function () {
-                    return key > 1 ? (_this.getPercentage(count, data[key]) + "%" ) : data[key];
+                    return key > 1 ? (_this.getPercentage(count, data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
                 }
             }).appendTo(td);
         }
@@ -272,14 +276,11 @@
 
 var options = {
     data : {
-        "22-05-2016" : [200, 10, 20, 30, 40, 10, 20, 20],
-        "23-05-2016" : [300, 200, 150, 50, 20, 20, 90, 100 ],
-        "24-05-2016" : [200, 110, 150, 50, 10, 20, 30, 40],
-        "25-05-2016" : [100, 10, 10, 50, 20, 20, 60, 0]
+
     },
     startDate : "22-05-2016",
     endDate : "5-05-2016",
-    dateFormat : "DD-MM-YYYY", //if not iso date given
+    inputDateFormat : "DD-MM-YYYY", //if not iso date given
     dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis",
     cellClickEvent : function(date, day){
