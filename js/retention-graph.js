@@ -273,17 +273,3 @@
     };
 
 }));
-
-var options = {
-    data : {
-
-    },
-    startDate : "22-05-2016",
-    endDate : "5-05-2016",
-    inputDateFormat : "DD-MM-YYYY", //if not iso date given
-    dateDisplayFormat : "MMM DD YYYY",
-    title : "Retention Analysis",
-    cellClickEvent : function(date, day){
-        window.location = "https://www.google.com?date=" + date + "$day="+ day;
-    }
-};
