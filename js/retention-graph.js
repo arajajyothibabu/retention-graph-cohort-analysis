@@ -39,9 +39,11 @@
                 customEmptyDataMessage : null
             };
 
-            _this.options = this.generateOptions();
+            _this.options = _this.generateOptions();
 
             _this.proceedFlag = Object.keys(_this.options.data).length;
+
+            _this.options.data = _this.sortData();
 
             //some dom Events
             $(document).ready(function(){
@@ -188,6 +190,14 @@
         return options;
     };
 
+    Retention.prototype.sortData = function () {
+        const ordered = {};
+        Object.keys(this.options.data).sort().forEach(function(key) {
+            ordered[key] = this.options.data[key];
+        });
+        return ordered;
+    };
+
     Retention.prototype.getRows = function(){
         var rows = [];
         var keys = Object.keys(this.options.data);
@@ -218,9 +228,10 @@
         return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     };
 
-    Retention.prototype.tooltipData = function(date, total, count, dayIndex){
+    Retention.prototype.tooltipData = function(date, total, count, dayIndex, isActive){
         var fromDate = this.formatDate(date);//.format("MMM DD");
         var toDate =  moment(this.formatDate(date), this.options.dateDisplayFormat).add(dayIndex-1, "days").format(this.options.dateDisplayFormat);
+        var active = isActive? " active " : " in-active ";
         return  "Of " + total + " users came on " + fromDate + ", " + (count + " were active on " + toDate);
     };
 
@@ -254,7 +265,7 @@
                 'data-toggle' : "tooltip",
                 title : function () {
                     if(key > 1 && data[key] != 0)
-                        return  _this.tooltipData(date, count, data[key], key);
+                        return  _this.tooltipData(date, count, data[key], key, true);
                 },
                 text : function () {
                     return key > 1 ? (_this.getPercentage(count, data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
