@@ -26,7 +26,11 @@ Retention graph (Cohort Analysis) using Bootstrap ```(v0.1.5)```
         //your closure with date=" + date + "&day="+ day;
     },
     showEmptyDataMessage : true,
-    customEmptyDataMessage : null
+    customEmptyDataMessage : null,
+    enableInactive : false,
+    dayClickEvent : function(day, startDate, endDate){
+        //do something with day#, startDate and endDate
+    }
 }
 ```
 
