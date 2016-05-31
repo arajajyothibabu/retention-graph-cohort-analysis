@@ -14,7 +14,10 @@ var options = {
     dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis",
     cellClickEvent : function(date, day){
-        window.location = "https://www.google.com?date=" + date + "$day="+ day;
+        alert("date=" + date + "&day="+ day);
     },
-    enableInactive: true
+    enableInactive: true,
+    dayClickEvent : function(day, startDate, endDate){
+        alert(day + "start" + startDate + "end" + endDate);
+    }
 };

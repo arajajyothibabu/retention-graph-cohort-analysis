@@ -37,7 +37,10 @@
                 },
                 showEmptyDataMessage : true,
                 customEmptyDataMessage : null,
-                enableInactive : false
+                enableInactive : false,
+                dayClickEvent : function(day, startDate, endDate){
+                    //do something
+                }
             };
 
             _this.options = _this.generateOptions();
@@ -50,6 +53,10 @@
             $(document).ready(function(){
                 $(document).on('click', 'td.clickable', function () {
                     _this.options.cellClickEvent($(this).attr('date'), $(this).attr('day'));
+                });
+
+                $(document).on('click', 'td.head-clickable', function () {
+                    _this.options.dayClickEvent($(this).attr('day'), _this.options.startDate, _this.options.endDate);
                 });
 
                 $(document).on('click', '#retention-active-switch', function(){
@@ -208,7 +215,10 @@
         var headerData = this.getHeaderData();
         for(var key in headerData){
             $('<td />', {
-                class : "retention-cell",
+                class : function(){
+                    return key > 1 ? "retention-cell head-clickable" : "retention-cell";
+                },
+                day : key-1,
                 text : headerData[key]
             }).appendTo(tHeadRow);
         }
@@ -238,6 +248,8 @@
     Retention.prototype.getRows = function(){
         var rows = [];
         var keys = Object.keys(this.options.data);
+        this.options.startDate = keys[0];
+        this.options.endDate = keys[keys.length-1];
         for(var key in keys){
             if(this.options.data.hasOwnProperty(keys[key])) {
                 rows.push([keys[key]].concat(this.options.data[keys[key]]));
