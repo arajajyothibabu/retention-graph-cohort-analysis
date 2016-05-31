@@ -48,11 +48,26 @@
 
             //some dom Events
             $(document).ready(function(){
-                $('td.clickable').click(function () {
+                $(document).on('click', 'td.clickable', function () {
                     _this.options.cellClickEvent($(this).attr('date'), $(this).attr('day'));
                 });
 
-                $('[data-toggle="tooltip"]').tooltip(); //calling bootstrap tooltip
+                $(document).on('click', '#retention-active-switch', function(){
+                    var body = $('.retention-body');
+                    if($(this).hasClass('retention-inactive')){
+                        _this.start(body, false);
+                        $(this).addClass('retention-active btn-success').removeClass('retention-inactive btn-warning').text("Active");
+                        $('.retention-title').text("Inactive User Analysis");
+                    }else{
+                        _this.start(body, true);
+                        $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
+                        $('.retention-title').text("Active User Analysis");
+                    }
+                });
+
+                $("body").tooltip({
+                    selector: '[data-toggle="tooltip"]'
+                });//calling bootstrap tooltip
             });
 
             _this.init();
@@ -162,19 +177,10 @@
         var _this = this, body;
         var switchInput = $('<a />', {
             type : 'button',
+            id : 'retention-active-switch',
             class : 'retention-inactive btn btn-warning',
-            text : 'Inactive'
-        }).click(function(){
-            body = $('.retention-body');
-            if($(this).hasClass('retention-inactive')){
-                _this.start(body, false);
-                $(this).addClass('retention-active btn-success').removeClass('retention-inactive btn-warning').text("Active");
-                $('.retention-title').text("Inactive User Analysis");
-            }else{
-                _this.start(body, true);
-                $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
-                $('.retention-title').text("Active User Analysis");
-            }
+            text : 'Inactive',
+            style : 'margin: 0px 5px'
         });
         return switchInput;
     };
