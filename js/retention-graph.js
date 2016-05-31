@@ -59,6 +59,10 @@
                     _this.options.dayClickEvent($(this).attr('day'), _this.options.startDate, _this.options.endDate);
                 });
 
+                $(document).on('mouseover mouseout', 'td.head-clickable', function () {
+                    $('.col' + $(this).attr('day')).toggleClass('hover');
+                });
+
                 $(document).on('click', '#retention-active-switch', function(){
                     var body = $('.retention-body');
                     if($(this).hasClass('retention-inactive')){
@@ -301,7 +305,7 @@
         var count = data[1] || 1; //to handle divisionBy0
         var td, div;
         for(var key in data){
-            var className = key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date";
+            var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key-1));
             td = $('<td />', {
                 class : className,
                 style : function () {
