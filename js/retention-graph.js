@@ -51,6 +51,8 @@
 
             _this.proceedFlag = Object.keys(_this.options.data).length;
 
+            _this.totalFirstColumnCount = 0;
+
             _this.options.data = _this.sortData();
 
             //some dom Events
@@ -80,12 +82,12 @@
                     }
                 });
 
-                if (this.options.enableTooltip) {
+                if (_this.options.enableTooltip) {
                     $("body").tooltip({
                         selector: '[data-toggle="tooltip"]'
                     });//calling bootstrap tooltip
                 }
-                
+
             });
 
             _this.init();
@@ -251,9 +253,12 @@
     Retention.prototype.sortData = function () {
         const ordered = {};
         var _this = this;
+        var firstColumnCount = 0;
         Object.keys(this.options.data).sort().forEach(function(key) {
             ordered[key] = _this.options.data[key];
+            firstColumnCount += ordered[key][0];
         });
+        _this.totalFirstColumnCount = firstColumnCount;
         return ordered;
     };
 
@@ -300,7 +305,7 @@
         var headerDataAppender = $("input[name='retention-switch']:checked").val(); //changes by selection of switch
         var headerData = [];
         for(var i = 0; i < 9; i++){
-            headerData.push(i > 0? (headerDataAppender + "-" + (i-1)) : ("Date \\ " + headerDataAppender + "s"));
+            headerData.push(i > 0? (headerDataAppender + "-" + (i-1)) : (this.totalFirstColumnCount + " Users"));
         }
         return headerData;
     };
@@ -327,7 +332,7 @@
             }).appendTo(row);
             div = $('<div />', {
                 'data-toggle' : "tooltip",
-                title : function () {
+                'data-original-title' : function () {
                     if(key > 1) {
                         dayCount = isActive? data[key] : count-data[key];
                         return _this.tooltipData(date, count, dayCount, key, isActive);
