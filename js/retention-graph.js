@@ -51,9 +51,13 @@
 
             _this.proceedFlag = Object.keys(_this.options.data).length;
 
-            _this.totalFirstColumnCount = 0;
+            _this.totalCounts = {};
 
             _this.options.data = _this.sortData();
+
+            _this.currentData = _this.options.data['days'];
+
+            _this.currentSelected = 'retentionDays';
 
             //some dom Events
             $(document).ready(function() {
@@ -80,6 +84,15 @@
                         $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
                         $('.retention-title').text("Active User Analysis");
                     }
+                });
+
+                $('input[name="retention-switch"]').click(function () {
+                    var body = $('.retention-body');
+                    var selectedKey = $(this).val();
+                    var key =  selectedKey == "Day" ? 'days' : (selectedKey == "Week" ? 'weeks' : 'months');
+                    _this.currentSelected = 'retention' + selectedKey + 's';
+                    _this.currentData = _this.options.data[key];
+                    _this.start(body, false);
                 });
 
                 if (_this.options.enableTooltip) {
@@ -170,28 +183,37 @@
             type : "hidden"
         }).appendTo(controls); //TODO: implement daterangepicker
 
-        var switchContainer = $('<a />', {
-            class : "switch-field"
-        }).appendTo(controls);
+        var switchData = this.getSwitchData();
 
-        var switchData = ["Day", "Week", "Month"];
+        var switchContainer = $('<a />', {
+            class : "switch-field" + (switchData.length == 1 ? " hide" : "")
+        }).appendTo(controls);
 
         for(var key in switchData){
             $('<input />', {
                 type : "radio",
                 name : "retention-switch",
                 id : switchData[key],
-                value : switchData[key],
-                disabled : ""
+                value : switchData[key]
             }).appendTo(switchContainer);
             $('<label />', {
                 for : switchData[key],
-                style : "cursor:not-allowed",
                 title : "Feature yet to implement",
                 text : switchData[key] + "s" //appending s for "days"
             }).appendTo(switchContainer);
         }
+
         return container;
+    };
+
+    Retention.prototype.getSwitchData = function () {
+        var switchData = [];
+        var _this = this;
+        Object.keys(_this.options.data).forEach(function (key) {
+            if(Object.keys(_this.options.data[key]).length > 0)
+                switchData.push(key.capitalize().slice(0,-1));
+        });
+        return switchData;
     };
 
     Retention.prototype.getInactiveSwitch = function () {
@@ -227,6 +249,7 @@
         }).appendTo(tHead);
 
         var headerData = this.getHeaderData();
+        var length = headerData.length;
         for(var key in headerData){
             $('<td />', {
                 class : function(){
@@ -236,6 +259,7 @@
                 text : headerData[key]
             }).appendTo(tHeadRow);
         }
+        $('.head-clickable').css('width', (100 / (length+1)) + '%');
         return tHead;
     };
 
@@ -253,23 +277,31 @@
     Retention.prototype.sortData = function () {
         const ordered = {};
         var _this = this;
-        var firstColumnCount = 0;
-        Object.keys(this.options.data).sort().forEach(function(key) {
-            ordered[key] = _this.options.data[key];
-            firstColumnCount += ordered[key][0];
+        var count = 0;
+        var totalCounts = {};
+        var intermediate = {};
+        Object.keys(_this.options.data).forEach(function(key) {
+            Object.keys(_this.options.data[key]).sort().forEach(function(subKey){
+                intermediate[subKey] = _this.options.data[key][subKey];
+                count += intermediate[subKey][0];
+            });
+            ordered[key] = intermediate;
+            totalCounts[key] = count;
+            intermediate = {};
+            count = 0;
         });
-        _this.totalFirstColumnCount = firstColumnCount;
+        _this.totalCounts = totalCounts;
         return ordered;
     };
 
     Retention.prototype.getRows = function(){
         var rows = [];
-        var keys = Object.keys(this.options.data);
+        var keys = Object.keys(this.currentData);
         this.options.startDate = keys[0];
         this.options.endDate = keys[keys.length-1];
         for(var key in keys){
-            if(this.options.data.hasOwnProperty(keys[key])) {
-                rows.push([keys[key]].concat(this.options.data[keys[key]]));
+            if(this.currentData.hasOwnProperty(keys[key])) {
+                rows.push([keys[key]].concat(this.currentData[keys[key]]));
             }
         }
         return rows;
@@ -287,6 +319,12 @@
         return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
     };
 
+    String.prototype.capitalize = function(){
+        return this.toLowerCase().replace( /\b\w/g, function (m) {
+            return m.toUpperCase();
+        });
+    };
+
     Retention.prototype.shadeColor = function(color, percent) { //#
         color = this.isValidHex(color) ? color : "#3f83a3"; //handling null color;
         percent = 1.0 - Math.ceil(percent / 10) / 10;
@@ -302,10 +340,12 @@
     };
 
     Retention.prototype.getHeaderData = function(){
-        var headerDataAppender = $("input[name='retention-switch']:checked").val(); //changes by selection of switch
+        var selector = $("input[name='retention-switch']:checked"); //changes by selection of switch
+        var headerDataAppender = $(selector).val();
         var headerData = [];
-        for(var i = 0; i < 9; i++){
-            headerData.push(i > 0? (headerDataAppender + "-" + (i-1)) : (this.totalFirstColumnCount + " Users"));
+        var length = this.options['retention' + headerDataAppender + 's'] + 2;
+        for(var i = 0; i < length; i++){
+            headerData.push(i > 0? (headerDataAppender + " " + (i-1)) : (this.totalCounts[headerDataAppender.toLowerCase() + 's'] + " Users"));
         }
         return headerData;
     };
@@ -317,7 +357,8 @@
         var dayCount = 0;
         var count = data[1] || 1; //to handle divisionBy0
         var td, div;
-        for(var key in data){
+        var keysLength = _this.options[_this.currentSelected] + 2;
+        for(var key = 0; key < keysLength; key++){
             var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key-1));
             td = $('<td />', {
                 class : className,
