@@ -40,7 +40,11 @@
                 enableInactive : false,
                 dayClickEvent : function(day, startDate, endDate){
                     //do something
-                }
+                },
+                retentionDays : 7,
+                retentionWeeks : 4,
+                retentionMonths : 3,
+                enableTooltip : true
             };
 
             _this.options = _this.generateOptions();
@@ -50,7 +54,7 @@
             _this.options.data = _this.sortData();
 
             //some dom Events
-            $(document).ready(function(){
+            $(document).ready(function() {
                 $(document).on('click', 'td.clickable', function () {
                     _this.options.cellClickEvent($(this).attr('date'), $(this).attr('day'));
                 });
@@ -63,22 +67,25 @@
                     $('.col' + $(this).attr('day')).toggleClass('hover');
                 });
 
-                $(document).on('click', '#retention-active-switch', function(){
+                $(document).on('click', '#retention-active-switch', function () {
                     var body = $('.retention-body');
-                    if($(this).hasClass('retention-inactive')){
+                    if ($(this).hasClass('retention-inactive')) {
                         _this.start(body, false);
                         $(this).addClass('retention-active btn-success').removeClass('retention-inactive btn-warning').text("Active");
                         $('.retention-title').text("Inactive User Analysis");
-                    }else{
+                    } else {
                         _this.start(body, true);
                         $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
                         $('.retention-title').text("Active User Analysis");
                     }
                 });
 
-                $("body").tooltip({
-                    selector: '[data-toggle="tooltip"]'
-                });//calling bootstrap tooltip
+                if (this.options.enableTooltip) {
+                    $("body").tooltip({
+                        selector: '[data-toggle="tooltip"]'
+                    });//calling bootstrap tooltip
+                }
+                
             });
 
             _this.init();
