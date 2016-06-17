@@ -101,11 +101,12 @@
         if(this.proceedFlag){
             this.start(body, true);
         }else{
-            this.end(body);
+            $('#retention-active-switch').hide();
+            this.emptyMessage(body);
         }
     };
 
-    Retention.prototype.end = function (body) {
+    Retention.prototype.emptyMessage = function (body) {
         if(this.options.showEmptyDataMessage){
             $('<h3 />', {
                 align : 'center',
@@ -191,7 +192,7 @@
             id : 'retention-active-switch',
             class : 'retention-inactive btn btn-warning',
             text : 'Inactive',
-            style : 'margin: 0px 5px'
+            style : 'margin: 0px 5px; width: 80px;'
         });
         return switchInput;
     };
@@ -337,7 +338,7 @@
         if(typeof options == 'object'){
             new Retention(this, options);
         }else{
-            throw new Error("Need data to show retention graph..!");
+            throw new Error("Need options to show retention graph..!");
         }
     };
 
