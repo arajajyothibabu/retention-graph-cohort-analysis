@@ -21,8 +21,8 @@ var options = {
             "month4": [100, 10, 10, 50, 20, 20, 60, 0]
         }
     },
-    startDate : "22-05-2016",
-    endDate : "5-05-2016",
+    //startDate : "22-05-2016",
+    //endDate : "25-05-2016",
     inputDateFormat : "DD-MM-YYYY", //if not iso date given
     dateDisplayFormat : "MMM DD YYYY",
     title : "Retention Analysis",

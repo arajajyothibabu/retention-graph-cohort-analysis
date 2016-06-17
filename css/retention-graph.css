@@ -162,3 +162,8 @@
 .hover {
     opacity : 0.4;
 }
+
+.display-inline{
+    display: inline !important;
+    float: left;
+}

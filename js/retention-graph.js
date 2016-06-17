@@ -44,7 +44,8 @@
                 retentionDays : 7,
                 retentionWeeks : 4,
                 retentionMonths : 3,
-                enableTooltip : true
+                enableTooltip : true,
+                enableDateRange : true
             };
 
             _this.options = _this.generateOptions();
@@ -57,9 +58,15 @@
 
             _this.currentData = _this.options.data['days'];
 
+            _this.setDateRanges();
+
+            console.log(_this.options);
+
             _this.currentSelected = 'retentionDays';
 
             _this.isActive = true;
+
+            _this.isDateModified = false;
 
             //some dom Events
             $(document).ready(function() {
@@ -99,10 +106,26 @@
                     _this.start(body, false);
                 });
 
+                if(_this.options.enableDateRange) {
+                    $('#retention-date-range').daterangepicker({
+                        "startDate": _this.options.startDate,
+                        "endDate": _this.options.endDate,
+                        "minDate" : _this.options.startDate,
+                        "maxDate" : _this.options.endDate,
+                        "locale": {
+                            "format": _this.options.inputDateFormat || "DD-MM-YYYY"
+                        }
+                    },function(start, end, label) {
+                        _this.isDateModified = true;
+                        _this.options.startDate = start;
+                        _this.options.endDate = end;
+                        var body = $('.retention-body');
+                        _this.start(body);
+                    });
+                }
+
                 if (_this.options.enableTooltip) {
-                    $("body").tooltip({
-                        selector: '[data-toggle="tooltip"]'
-                    });//calling bootstrap tooltip
+                    $('[data-toggle="tooltip"]').tooltip();
                 }
 
             });
@@ -151,7 +174,7 @@
 
         var tbody = $('<tbody />').appendTo(table);
 
-        var rowsData = this.getRows();
+        var rowsData = this.isDateModified? this.getModifiedRows() : this.getRows();
 
         for(var row in rowsData){
             this.generateRow(rowsData[row]).appendTo(tbody);
@@ -174,23 +197,24 @@
         }).appendTo(header);
 
         var controls = $('<div />', {
-            class : "box-tools"
+            class : "box-tools",
+            style : 'width : 50%'
         }).appendTo(header);
 
-        if(this.options.enableInactive) {
-            var retentionSwitch = this.getInactiveSwitch();
-            retentionSwitch.appendTo(controls);
+        if(this.options.enableDateRange) {
+            var dateRange = $('<input />', {
+                id: "retention-date-range",
+                type: "text",
+                style : 'width : 35%; margin-right: 10px;',
+                class: 'form-control display-inline'
+            }).appendTo(controls);
         }
-
-        var dateRange = $('<input />',{
-            id : "date-range",
-            type : "hidden"
-        }).appendTo(controls); //TODO: implement daterangepicker
 
         var switchData = this.getSwitchData();
 
         var switchContainer = $('<a />', {
-            class : "switch-field" + (switchData.length == 1 ? " hide" : "")
+            class : "switch-field display-inline" + (switchData.length == 1 ? " hide" : ""),
+            style : 'width : 45%',
         }).appendTo(controls);
 
         for(var key in switchData){
@@ -198,13 +222,19 @@
                 type : "radio",
                 name : "retention-switch",
                 id : switchData[key],
-                value : switchData[key]
+                value : switchData[key],
+                class : 'form-control'
             }).appendTo(switchContainer);
             $('<label />', {
                 for : switchData[key],
                 title : "Feature yet to implement",
                 text : switchData[key] + "s" //appending s for "days"
             }).appendTo(switchContainer);
+        }
+
+        if(this.options.enableInactive) {
+            var retentionSwitch = this.getInactiveSwitch();
+            retentionSwitch.appendTo(controls);
         }
 
         return container;
@@ -225,9 +255,9 @@
         var switchInput = $('<a />', {
             type : 'button',
             id : 'retention-active-switch',
-            class : 'retention-inactive btn btn-warning',
+            class : 'retention-inactive btn btn-warning display-inline form-control',
             text : 'Inactive',
-            style : 'margin: 0px 5px; width: 80px;'
+            style : 'margin: 0px 5px; width: 85px;'
         });
         return switchInput;
     };
@@ -299,17 +329,35 @@
         return ordered;
     };
 
+    Retention.prototype.getModifiedRows = function () {
+        var rows = [];
+        var keys = Object.keys(this.currentData);
+        var date;
+        for(var key in keys){
+            date = keys[key];
+            if(this.currentData.hasOwnProperty(date) && this.isDateBetween(date)) {
+                rows.push([keys[key]].concat(this.currentData[keys[key]]));
+            }
+        }
+        return rows;
+    }
+
     Retention.prototype.getRows = function(){
         var rows = [];
         var keys = Object.keys(this.currentData);
-        this.options.startDate = keys[0];
-        this.options.endDate = keys[keys.length-1];
         for(var key in keys){
             if(this.currentData.hasOwnProperty(keys[key])) {
                 rows.push([keys[key]].concat(this.currentData[keys[key]]));
             }
         }
         return rows;
+    };
+
+    Retention.prototype.setDateRanges = function(){
+        var rows = [];
+        var keys = Object.keys(this.currentData);
+        this.options.startDate = keys[0];
+        this.options.endDate = keys[keys.length-1];
     };
 
     Retention.prototype.formatDate = function(date){
@@ -344,6 +392,13 @@
         var toDate =  moment(this.formatDate(date), this.options.dateDisplayFormat).add(dayIndex-1, "days").format(this.options.dateDisplayFormat);
         var active = this.isActive? " active " : " inactive ";
         return  "Of " + total + " users came on " + fromDate + ", " + (count + " were " + active + " on " + toDate);
+    };
+
+    Retention.prototype.isDateBetween = function (date) {
+        var start = this.options.startDate;
+        var end = this.options.endDate;
+        date = this.options.inputDateFormat != null ? moment(date, this.options.inputDateFormat) : date;
+        return start.diff(date) <= 0 && date.diff(end) <= 0; //moment ref:http://momentjs.com/docs/#/displaying/difference/
     };
 
     Retention.prototype.getHeaderData = function(){

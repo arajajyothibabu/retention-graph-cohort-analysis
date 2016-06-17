@@ -8,6 +8,11 @@ Retention graph (Cohort Analysis) using Bootstrap ```(v0.1.5)```
 
 ![alt tag](http://i.imgur.com/uJQTG1Q.png)
 
+###Dependencies:
+#####1. Bootstrap
+#####2. Moment.js
+#####3. DateRangePicker
+
 ###Input options:
 ```
 {
@@ -63,7 +68,7 @@ You can figure out :)
 ```
 
 ###License
-It is available under the [MIT license](http://www.opensource.org/licenses/mit-license.php) as Bootstrap, Moment.js is included in this repository
+It is available under the [MIT license](http://www.opensource.org/licenses/mit-license.php) as Bootstrap, Moment.js, DateRangePicker.js is included in this repository
 
 The MIT License (MIT)
 
