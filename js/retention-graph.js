@@ -308,6 +308,8 @@
     };
 
     Retention.prototype.formatDate = function(date){
+        if(! Date.parse(date))
+            return date;
         return (this.options.dateDisplayFormat != null) ? (this.options.inputDateFormat ? moment(date, this.options.inputDateFormat).format(this.options.dateDisplayFormat) : moment(date).format(this.options.dateDisplayFormat)) : date;
     };
 
