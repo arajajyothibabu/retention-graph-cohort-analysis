@@ -59,6 +59,8 @@
 
             _this.currentSelected = 'retentionDays';
 
+            _this.isActive = true;
+
             //some dom Events
             $(document).ready(function() {
                 $(document).on('click', 'td.clickable', function () {
@@ -76,11 +78,13 @@
                 $(document).on('click', '#retention-active-switch', function () {
                     var body = $('.retention-body');
                     if ($(this).hasClass('retention-inactive')) {
-                        _this.start(body, false);
+                        _this.isActive = false;
+                        _this.start(body);
                         $(this).addClass('retention-active btn-success').removeClass('retention-inactive btn-warning').text("Active");
                         $('.retention-title').text("Inactive User Analysis");
                     } else {
-                        _this.start(body, true);
+                        _this.isActive = true;
+                        _this.start(body);
                         $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
                         $('.retention-title').text("Active User Analysis");
                     }
@@ -121,7 +125,7 @@
         body.appendTo(container);
 
         if(this.proceedFlag){
-            this.start(body, true);
+            this.start(body);
         }else{
             $('#retention-active-switch').hide();
             this.emptyMessage(body);
@@ -138,7 +142,7 @@
         }
     };
 
-    Retention.prototype.start = function (body, isActive) {
+    Retention.prototype.start = function (body) {
         $(body).html('');
         var table = this.getTable();
         table.appendTo(body);
@@ -150,7 +154,7 @@
         var rowsData = this.getRows();
 
         for(var row in rowsData){
-            this.generateRow(rowsData[row], isActive).appendTo(tbody);
+            this.generateRow(rowsData[row]).appendTo(tbody);
         }
 
     };
@@ -335,10 +339,10 @@
         return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     };
 
-    Retention.prototype.tooltipData = function(date, total, count, dayIndex, isActive){
+    Retention.prototype.tooltipData = function(date, total, count, dayIndex){
         var fromDate = this.formatDate(date);//.format("MMM DD");
         var toDate =  moment(this.formatDate(date), this.options.dateDisplayFormat).add(dayIndex-1, "days").format(this.options.dateDisplayFormat);
-        var active = isActive? " active " : " inactive ";
+        var active = this.isActive? " active " : " inactive ";
         return  "Of " + total + " users came on " + fromDate + ", " + (count + " were " + active + " on " + toDate);
     };
 
@@ -353,7 +357,7 @@
         return headerData;
     };
 
-    Retention.prototype.generateRow = function(data, isActive){
+    Retention.prototype.generateRow = function(data){
         var _this = this;
         var row = $('<tr />');
         var date = data[0];
@@ -367,7 +371,7 @@
                 class : className,
                 style : function () {
                     if(key > 1) {
-                        dayCount = isActive? data[key] : count-data[key];
+                        dayCount = _this.isActive? data[key] : count-data[key];
                         return "background-color :" + _this.shadeColor("", _this.getPercentage(count, dayCount));
                     }
                 },
@@ -378,12 +382,12 @@
                 'data-toggle' : "tooltip",
                 'data-original-title' : function () {
                     if(key > 1) {
-                        dayCount = isActive? data[key] : count-data[key];
-                        return _this.tooltipData(date, count, dayCount, key, isActive);
+                        dayCount = _this.isActive? data[key] : count-data[key];
+                        return _this.tooltipData(date, count, dayCount, key);
                     }
                 },
                 text : function () {
-                    return key > 1 ? (_this.getPercentage(count, isActive? data[key] : count-data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
+                    return key > 1 ? (_this.getPercentage(count, _this.isActive? data[key] : count-data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
                 }
             }).appendTo(td);
         }
