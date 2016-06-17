@@ -52,7 +52,8 @@ Retention graph (Cohort Analysis) using Bootstrap ```(v0.1.5)```
     retentionDays : 7,
     retentionWeeks : 4,
     retentionMonths : 3,
-    enableTooltip : true
+    enableTooltip : true,
+    enableDateRange : false
 }
 ```
 

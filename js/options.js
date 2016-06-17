@@ -32,5 +32,6 @@ var options = {
     enableInactive: true,
     dayClickEvent : function(day, startDate, endDate){
         alert(day + "start" + startDate + "end" + endDate);
-    }
+    },
+    enableDateRange:true
 };

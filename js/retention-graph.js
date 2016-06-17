@@ -45,7 +45,7 @@
                 retentionWeeks : 4,
                 retentionMonths : 3,
                 enableTooltip : true,
-                enableDateRange : true
+                enableDateRange : false
             };
 
             _this.options = _this.generateOptions();
@@ -59,8 +59,6 @@
             _this.currentData = _this.options.data['days'];
 
             _this.setDateRanges();
-
-            console.log(_this.options);
 
             _this.currentSelected = 'retentionDays';
 
@@ -108,10 +106,12 @@
 
                 if(_this.options.enableDateRange) {
                     $('#retention-date-range').daterangepicker({
+                        "autoApply" : true,
                         "startDate": _this.options.startDate,
                         "endDate": _this.options.endDate,
                         "minDate" : _this.options.startDate,
                         "maxDate" : _this.options.endDate,
+                        'opens' : 'left',
                         "locale": {
                             "format": _this.options.inputDateFormat || "DD-MM-YYYY"
                         }
@@ -174,7 +174,7 @@
 
         var tbody = $('<tbody />').appendTo(table);
 
-        var rowsData = this.isDateModified? this.getModifiedRows() : this.getRows();
+        var rowsData = this.getRows();
 
         for(var row in rowsData){
             this.generateRow(rowsData[row]).appendTo(tbody);
@@ -197,24 +197,24 @@
         }).appendTo(header);
 
         var controls = $('<div />', {
-            class : "box-tools",
-            style : 'width : 50%'
+            class : "box-tools"
         }).appendTo(header);
 
         if(this.options.enableDateRange) {
+            var anchorWrapper = $('<a />', {
+                style : 'display: inline-block;margin:0 5px;'
+            }).appendTo(controls);
             var dateRange = $('<input />', {
                 id: "retention-date-range",
                 type: "text",
-                style : 'width : 35%; margin-right: 10px;',
-                class: 'form-control display-inline'
-            }).appendTo(controls);
+                class: 'form-control'
+            }).appendTo(anchorWrapper);
         }
 
         var switchData = this.getSwitchData();
 
         var switchContainer = $('<a />', {
-            class : "switch-field display-inline" + (switchData.length == 1 ? " hide" : ""),
-            style : 'width : 45%',
+            class : "switch-field" + (switchData.length == 1 ? " hide" : "")
         }).appendTo(controls);
 
         for(var key in switchData){
@@ -255,9 +255,9 @@
         var switchInput = $('<a />', {
             type : 'button',
             id : 'retention-active-switch',
-            class : 'retention-inactive btn btn-warning display-inline form-control',
+            class : 'retention-inactive btn btn-warning',
             text : 'Inactive',
-            style : 'margin: 0px 5px; width: 85px;'
+            style : 'width: 85px;'
         });
         return switchInput;
     };
@@ -346,7 +346,7 @@
         var rows = [];
         var keys = Object.keys(this.currentData);
         for(var key in keys){
-            if(this.currentData.hasOwnProperty(keys[key])) {
+            if(this.currentData.hasOwnProperty(keys[key]) && this.isDateBetween(keys[key])) {
                 rows.push([keys[key]].concat(this.currentData[keys[key]]));
             }
         }
@@ -395,10 +395,11 @@
     };
 
     Retention.prototype.isDateBetween = function (date) {
+        if(this.currentSelected != 'retentionDays') return true;
         var start = this.options.startDate;
         var end = this.options.endDate;
         date = this.options.inputDateFormat != null ? moment(date, this.options.inputDateFormat) : date;
-        return start.diff(date) <= 0 && date.diff(end) <= 0; //moment ref:http://momentjs.com/docs/#/displaying/difference/
+        return this.isDateModified? start.diff(date) <= 0 && date.diff(end) <= 0 : true; //moment ref:http://momentjs.com/docs/#/displaying/difference/
     };
 
     Retention.prototype.getHeaderData = function(){

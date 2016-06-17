@@ -162,8 +162,9 @@
 .hover {
     opacity : 0.4;
 }
-
-.display-inline{
-    display: inline !important;
-    float: left;
+a:hover{
+    text-decoration: none !important;
+}
+#retention-active-switch{
+    vertical-align: inherit !important;
 }
