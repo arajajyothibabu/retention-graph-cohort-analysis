@@ -253,13 +253,14 @@
         for(var key in headerData){
             $('<td />', {
                 class : function(){
-                    return key > 1 ? "retention-cell head-clickable" : "retention-cell";
+                    return key > 1 ? "retention-cell head-clickable" : (key == 0 ? "retention-cell key-cell" : "retention-cell");
                 },
                 day : key-1,
                 text : headerData[key]
             }).appendTo(tHeadRow);
         }
-        $('.head-clickable').css('width', (100 / (length+1)) + '%');
+        $('.head-clickable .retention-cell').css('width', (85 / (length+1)) + '%');
+        $('.retention-cell.key-cell').css('width', '15%');
         return tHead;
     };
 
