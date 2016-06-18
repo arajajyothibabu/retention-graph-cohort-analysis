@@ -99,6 +99,16 @@
                     var body = $('.retention-body');
                     var selectedKey = $(this).val();
                     var key =  selectedKey == "Day" ? 'days' : (selectedKey == "Week" ? 'weeks' : 'months');
+                    if(_this.options.enableDateRange) {
+                        var drp = $('#retention-date-range');
+                        if(selectedKey != "Day") {
+                            $(drp).attr('readonly', 'true');
+                            $('.calendar').hide();
+                        }else{
+                            $(drp).removeAttr('readonly');
+                            $('.calendar').show();
+                        }
+                    }
                     _this.currentSelected = 'retention' + selectedKey + 's';
                     _this.currentData = _this.options.data[key];
                     _this.start(body, false);
