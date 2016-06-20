@@ -431,31 +431,34 @@
         var count = data[1] || 1; //to handle divisionBy0
         var td, div;
         var keysLength = _this.options[_this.currentSelected] + 2;
+        var actualLength = data.length;
         for(var key = 0; key < keysLength; key++){
-            var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key-1));
-            td = $('<td />', {
-                class : className,
-                style : function () {
-                    if(key > 1) {
-                        dayCount = _this.isActive? data[key] : count-data[key];
-                        return "background-color :" + _this.shadeColor("", _this.getPercentage(count, dayCount));
+            if(key < actualLength) {
+                var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key - 1));
+                td = $('<td />', {
+                    class: className,
+                    style: function () {
+                        if (key > 1) {
+                            dayCount = _this.isActive ? data[key] : count - data[key];
+                            return "background-color :" + _this.shadeColor("", _this.getPercentage(count, dayCount));
+                        }
+                    },
+                    date: date,
+                    day: key - 1
+                }).appendTo(row);
+                div = $('<div />', {
+                    'data-toggle': "tooltip",
+                    'data-original-title': function () {
+                        if (key > 1) {
+                            dayCount = _this.isActive ? data[key] : count - data[key];
+                            return _this.tooltipData(date, count, dayCount, key);
+                        }
+                    },
+                    text: function () {
+                        return key > 1 ? (_this.getPercentage(count, _this.isActive ? data[key] : count - data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
                     }
-                },
-                date : date,
-                day : key-1
-            }).appendTo(row);
-            div = $('<div />', {
-                'data-toggle' : "tooltip",
-                'data-original-title' : function () {
-                    if(key > 1) {
-                        dayCount = _this.isActive? data[key] : count-data[key];
-                        return _this.tooltipData(date, count, dayCount, key);
-                    }
-                },
-                text : function () {
-                    return key > 1 ? (_this.getPercentage(count, _this.isActive? data[key] : count-data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
-                }
-            }).appendTo(td);
+                }).appendTo(td);
+            }
         }
         return row;
     };
