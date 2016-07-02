@@ -1,4 +1,4 @@
-.box{
+.retention-box{
     position:relative;
     border-radius:3px;
     background:#ffffff;
@@ -8,39 +8,39 @@
     box-shadow:0 1px 1px rgba(0,0,0,0.1)
 }
 
-.box-body{
+.retention-box-body{
     max-height:300px;
     overflow:auto
 }
 
-.box-body:before,.box-footer:before,.box-header:after,.box-body:after,.box-footer:after{
+.retention-box-body:before,.retention-box-footer:before,.retention-box-header:after,.retention-box-body:after,.retention-box-footer:after{
     content:" ";display:table
 }
-.box-header:after,.box-body:after,.box-footer:after{
+.retention-box-header:after,.retention-box-body:after,.retention-box-footer:after{
     clear:both
 }
-.box-header{
+.retention-box-header{
     color:#444;display:block;padding:10px;position:relative
 }
-.box-header.with-border{
+.retention-box-header.with-border{
     border-bottom:1px solid #f4f4f4
 }
-.collapsed-box .box-header.with-border{
+.collapsed-box .retention-box-header.with-border{
     border-bottom:none
 }
-.box-header>.fa,.box-header>.glyphicon,.box-header>.ion,.box-header .box-title{
+.retention-box-header>.fa,.retention-box-header>.glyphicon,.retention-box-header>.ion,.retention-box-header .retention-box-title{
     display:inline-block;font-size:18px;margin:0;line-height:1
 }
-.box-header>.fa,.box-header>.glyphicon,.box-header>.ion{
+.retention-box-header>.fa,.retention-box-header>.glyphicon,.retention-box-header>.ion{
     margin-right:5px
 }
-.box-header>.box-tools{
+.retention-box-header>.retention-box-tools{
     position:absolute;right:10px;top:5px
 }
-.box-header>.box-tools [data-toggle="tooltip"]{
+.retention-box-header>.retention-box-tools [data-toggle="tooltip"]{
     position:relative
 }
-.box-header>.box-tools.pull-right .dropdown-menu{
+.retention-box-header>.retention-box-tools.pull-right .dropdown-menu{
     right:0;left:auto
 }
 .btn-box-tool{
@@ -52,46 +52,46 @@
 .btn-box-tool.btn:active{
     box-shadow:none
 }
-.box-body{
+.retention-box-body{
     border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:3px;border-bottom-left-radius:3px;padding:10px
 }
-.no-header .box-body{
+.no-header .retention-box-body{
     border-top-right-radius:3px;border-top-left-radius:3px
 }
-.box-body>.table{
+.retention-box-body>.table{
     margin-bottom:0
 }
-.box-body .fc{
+.retention-box-body .fc{
     margin-top:5px
 }
-.box-body .full-width-chart{
+.retention-box-body .full-width-chart{
     margin:-19px
 }
-.box-body.no-padding .full-width-chart{
+.retention-box-body.no-padding .full-width-chart{
     margin:-9px
 }
-.box-body .box-pane{
+.retention-box-body .retention-box-pane{
     border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;border-bottom-left-radius:3px
 }
-.box-body .box-pane-right{
+.retention-box-body .retention-box-pane-right{
     border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:3px;border-bottom-left-radius:0
 }
-.box-tools{
+.retention-box-tools{
     position:absolute;right:10px;top:5px
 }
-.box-header>.box-tools [data-toggle="tooltip"]{
+.retention-box-header>.retention-box-tools [data-toggle="tooltip"]{
     position:relative
 }
-.box-header>.box-tools.pull-right .dropdown-menu{
+.retention-box-header>.retention-box-tools.pull-right .dropdown-menu{
     right:0;left:auto
 }
 .btn-box-tool{
     padding:5px;font-size:12px;background:transparent;color:#97a0b3
 }
-.box-title{
+.retention-box-title{
     display:inline-block;font-size:18px;margin:0;line-height:1
 }
-.box-header>.fa,.box-header>.glyphicon,.box-header>.ion{
+.retention-box-header>.fa,.retention-box-header>.glyphicon,.retention-box-header>.ion{
     margin-right:5px
 }
 
@@ -166,5 +166,10 @@ a:hover{
     text-decoration: none !important;
 }
 #retention-active-switch{
+    vertical-align: inherit !important;
+}
+
+.retention-toggle-values{
+    margin-left: 5px;
     vertical-align: inherit !important;
 }

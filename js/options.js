@@ -33,5 +33,7 @@ var options = {
     dayClickEvent : function(day, startDate, endDate){
         alert(day + "start" + startDate + "end" + endDate);
     },
-    enableDateRange:true
+    enableDateRange:true,
+    showAbsolute : false,
+    toggleValues : true
 };

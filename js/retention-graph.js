@@ -45,7 +45,9 @@
                 retentionWeeks : 4,
                 retentionMonths : 3,
                 enableTooltip : true,
-                enableDateRange : false
+                enableDateRange : false,
+                showAbsolute : false,
+                toggleValues : true
             };
 
             _this.options = _this.generateOptions();
@@ -63,6 +65,8 @@
             _this.currentSelected = 'retentionDays';
 
             _this.isActive = true;
+
+            _this.showValue = _this.options.showAbsolute;
 
             _this.isDateModified = false;
 
@@ -92,6 +96,19 @@
                         _this.start(body);
                         $(this).addClass('retention-inactive btn-warning').removeClass('retention-active btn-success').text("Inactive");
                         $('.retention-title').text("Active User Analysis");
+                    }
+                });
+
+                $(document).on('click', '#retention-toggle-values', function () {
+                    var body = $('.retention-body');
+                    if (_this.showValue) {
+                        _this.showValue = false;
+                        _this.start(body);
+                        $(this).addClass('retention-active btn-info').removeClass('retention-inactive btn-warning').text("#");
+                    } else {
+                        _this.showValue = true;
+                        _this.start(body);
+                        $(this).addClass('retention-inactive btn-primary').removeClass('retention-active btn-info').text("%");
                     }
                 });
 
@@ -135,7 +152,9 @@
                 }
 
                 if (_this.options.enableTooltip) {
-                    $('[data-toggle="tooltip"]').tooltip();
+                    $('body').tooltip({
+                        selector: '[data-toggle="tooltip"]'
+                    });
                 }
 
             });
@@ -192,22 +211,33 @@
 
     };
 
+    Retention.prototype.toggleValueButton =  function () {
+        var _this = this;
+        var switchInput = $('<a />', {
+            type : 'button',
+            id : 'retention-toggle-values',
+            class : 'retention-toggle-values btn btn-primary',
+            text : '#'
+        });
+        return switchInput;
+    };
+
     Retention.prototype.getContainer = function () {
         var container = $('<div />', {
-            class : 'box'
+            class : 'retention-box'
         }).appendTo(this.element);
 
         var header = $('<div />', {
-            class : "box-header with-border"
+            class : "retention-box-header with-border"
         }).appendTo(container);
 
         var title = $('<p />', {
-            class : "retention-title box-title",
+            class : "retention-title retention-box-title",
             text : this.options.title
         }).appendTo(header);
 
         var controls = $('<div />', {
-            class : "box-tools"
+            class : "retention-box-tools"
         }).appendTo(header);
 
         if(this.options.enableDateRange) {
@@ -247,6 +277,11 @@
             retentionSwitch.appendTo(controls);
         }
 
+        if(this.options.toggleValues){
+            var toggleValueButton = this.toggleValueButton();
+            toggleValueButton.appendTo(controls);
+        }
+
         return container;
     };
 
@@ -261,7 +296,7 @@
     };
 
     Retention.prototype.getInactiveSwitch = function () {
-        var _this = this, body;
+        var _this = this;
         var switchInput = $('<a />', {
             type : 'button',
             id : 'retention-active-switch',
@@ -274,7 +309,7 @@
 
     Retention.prototype.getBody = function () {
         var body = $('<div />', {
-            class : "retention-body box-body"
+            class : "retention-body retention-box-body"
         });
         return body;
     };
@@ -447,20 +482,29 @@
                     day: key - 1
                 }).appendTo(row);
                 div = $('<div />', {
-                    'data-toggle': "tooltip",
+                    'data-toggle': _this.options.enableTooltip ? "tooltip" : "",
                     'data-original-title': function () {
                         if (key > 1) {
                             dayCount = _this.isActive ? data[key] : count - data[key];
                             return _this.tooltipData(date, count, dayCount, key);
                         }
                     },
-                    text: function () {
-                        return key > 1 ? (_this.getPercentage(count, _this.isActive ? data[key] : count - data[key]) + "%" ) : (key == 0 ? _this.formatDate(data[key]) : data[key]);
-                    }
+                    text: _this.displayValue(key, data[key], count)
                 }).appendTo(td);
             }
         }
         return row;
+    };
+
+    Retention.prototype.displayValue = function(index, value, count){
+        value = this.isActive ? value : count - value;
+        if(index == 0)
+            return this.formatDate(value);
+        if(index > 1){
+            return this.showValue? value : (this.getPercentage(count, value) + " %");
+        }else{
+            return value;
+        }
     };
 
     $.fn.retention = function(options) {
