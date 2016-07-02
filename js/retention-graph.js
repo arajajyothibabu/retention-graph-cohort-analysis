@@ -47,7 +47,8 @@
                 enableTooltip : true,
                 enableDateRange : false,
                 showAbsolute : false,
-                toggleValues : true
+                toggleValues : true,
+                showHeaderValues : false
             };
 
             _this.options = _this.generateOptions();
@@ -69,6 +70,8 @@
             _this.showValue = _this.options.showAbsolute;
 
             _this.isDateModified = false;
+
+            _this.headerValues = [];
 
             //some dom Events
             $(document).ready(function() {
@@ -198,17 +201,21 @@
         $(body).html('');
         var table = this.getTable();
         table.appendTo(body);
-        var tableHeader = this.generateTableHeader(table);
-        tableHeader.appendTo(table);
+        //var tableHeader = this.generateTableHeader(table);
+        //tableHeader.appendTo(table);
 
         var tbody = $('<tbody />').appendTo(table);
 
         var rowsData = this.getRows();
 
+        this.headerValues = new Array(this.options[this.currentSelected] + 2).join('0').split('').map(parseFloat);
+        console.log(this.headerValues);
         for(var row in rowsData){
             this.generateRow(rowsData[row]).appendTo(tbody);
+            console.log(this.headerValues);
         }
-
+        var tableHeader = this.generateTableHeader(table);
+        tableHeader.appendTo(table);
     };
 
     Retention.prototype.toggleValueButton =  function () {
@@ -329,14 +336,25 @@
 
         var headerData = this.getHeaderData();
         var length = headerData.length;
+        var _this = this;
+        var total = _this.headerValues[0]; //day0 count
+        var td = "", span = "";
         for(var key in headerData){
-            $('<td />', {
+            td = $('<td />', {
                 class : function(){
                     return key > 0 ? "retention-cell head-clickable" : "retention-cell key-cell";
                 },
                 day : key-1,
-                text : headerData[key]
+                text : headerData[key] + " "
             }).appendTo(tHeadRow);
+            if(key > 0) {
+                span = $('<span />', {
+                    class: 'retention-badge badge-info',
+                    text: function () {
+                        return _this.showValue? _this.headerValues[key-1] : _this.getPercentage(total, _this.headerValues[key-1]) + "%";
+                    }
+                }).appendTo(td);
+            }
         }
         $('.head-clickable .retention-cell').css('width', (85 / (length+1)) + '%');
         $('.retention-cell.key-cell').css('width', '15%');
@@ -355,7 +373,7 @@
     };
 
     Retention.prototype.sortData = function () {
-        const ordered = {};
+        var ordered = {};
         var _this = this;
         var count = 0;
         var totalCounts = {};
@@ -469,12 +487,13 @@
         var actualLength = data.length;
         for(var key = 0; key < keysLength; key++){
             if(key < actualLength) {
+                dayCount = _this.isActive ? data[key] : count - data[key];
+                _this.headerValues[key-1] += key == 1? count : dayCount;
                 var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key - 1));
                 td = $('<td />', {
                     class: className,
                     style: function () {
                         if (key > 1) {
-                            dayCount = _this.isActive ? data[key] : count - data[key];
                             return "background-color :" + _this.shadeColor("", _this.getPercentage(count, dayCount));
                         }
                     },
@@ -485,7 +504,6 @@
                     'data-toggle': _this.options.enableTooltip ? "tooltip" : "",
                     'data-original-title': function () {
                         if (key > 1) {
-                            dayCount = _this.isActive ? data[key] : count - data[key];
                             return _this.tooltipData(date, count, dayCount, key);
                         }
                     },
@@ -497,14 +515,12 @@
     };
 
     Retention.prototype.displayValue = function(index, value, count){
-        value = this.isActive ? value : count - value;
         if(index == 0)
             return this.formatDate(value);
-        if(index > 1){
-            return this.showValue? value : (this.getPercentage(count, value) + " %");
-        }else{
+        if(index == 1)
             return value;
-        }
+        value = this.isActive? value : count - value;
+        return this.showValue? value : (this.getPercentage(count, value) + " %");
     };
 
     $.fn.retention = function(options) {
