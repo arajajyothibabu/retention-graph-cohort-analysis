@@ -160,7 +160,15 @@
 }
 
 .hover {
-    opacity : 0.4;
+    opacity : 0.6;
+    /*border-left: mediumslateblue solid 1px !important;
+    border-right: mediumslateblue solid 1px !important;*/
+    color: black;
+    background: red; /* For browsers that do not support gradients */
+    background: -webkit-radial-gradient(circle, lightskyblue, lightcyan, steelblue); /* Safari */
+    background: -o-radial-gradient(circle, red, yellow, green); /* Opera 11.6 to 12.0 */
+    background: -moz-radial-gradient(circle, red, yellow, green); /* Firefox 3.6 to 15 */
+    background: radial-gradient(circle, lightskyblue, lightcyan, steelblue); /* Standard syntax */
 }
 a:hover{
     text-decoration: none !important;

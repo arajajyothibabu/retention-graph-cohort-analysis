@@ -332,7 +332,7 @@
         for(var key in headerData){
             $('<td />', {
                 class : function(){
-                    return key > 1 ? "retention-cell head-clickable" : (key == 0 ? "retention-cell key-cell" : "retention-cell");
+                    return key > 0 ? "retention-cell head-clickable" : "retention-cell key-cell";
                 },
                 day : key-1,
                 text : headerData[key]
