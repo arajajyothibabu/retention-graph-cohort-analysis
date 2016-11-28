@@ -211,9 +211,9 @@
 
         this.headerValues = new Array(this.options[this.currentSelected] + 2).join('0').split('').map(parseFloat);
         this.initialValues = new Array(rowsData.length).join('0').split('').map(parseFloat); //initialising to 0
-        rowsData.forEach(function(data){
+        rowsData.forEach(function(data, index){
             _this.generateRow(data).appendTo(tbody);
-            _this.initialValues.push(data[1]); //pushes initial values before calculating retention. In fact calculating retention for these values
+            _this.initialValues[index] = data[1]; //pushes initial values before calculating retention. In fact calculating retention for these values
         });
         var tableHeader = this.generateTableHeader(table);
         tableHeader.appendTo(table);
@@ -337,12 +337,10 @@
     Retention.prototype.getTotalPercentage = function (value, index) {
         var total = 0;
         var threshold = this.initialValues.length - index;
-        console.log(this.initialValues);
         this.initialValues.forEach(function (data, i) {
             if(i < threshold)
                 total += data;
         });
-        console.log(total);
         return this.getPercentage(total, value);
     };
 
@@ -368,7 +366,7 @@
                 span = $('<span />', {
                     class: 'retention-badge badge-info',
                     text: function () {
-                        return _this.showValue? _this.headerValues[key-1] : _this.getTotalPercentage(_this.headerValues[key-1], key-2) + "%";
+                        return _this.showValue? _this.headerValues[key-1] : _this.getTotalPercentage(_this.headerValues[key-1], key-1) + "%";
                     }
                 }).appendTo(td);
             }
@@ -447,6 +445,7 @@
     };
 
     Retention.prototype.getPercentage = function (total, value) {
+        if(total == 0 || value  == 0) return 0; //handling Infinity
         return Math.round((value/total * 100) * 100) / 100;
     };
 
