@@ -73,6 +73,8 @@
 
             _this.headerValues = [];
 
+            _this.initialValues = [];
+
             //some dom Events
             $(document).ready(function() {
                 $(document).on('click', 'td.clickable', function () {
@@ -198,22 +200,21 @@
     };
 
     Retention.prototype.start = function (body) {
+        var _this = this;
         $(body).html('');
         var table = this.getTable();
         table.appendTo(body);
-        //var tableHeader = this.generateTableHeader(table);
-        //tableHeader.appendTo(table);
 
         var tbody = $('<tbody />').appendTo(table);
 
         var rowsData = this.getRows();
 
         this.headerValues = new Array(this.options[this.currentSelected] + 2).join('0').split('').map(parseFloat);
-        console.log(this.headerValues);
-        for(var row in rowsData){
-            this.generateRow(rowsData[row]).appendTo(tbody);
-            console.log(this.headerValues);
-        }
+        this.initialValues = new Array(rowsData.length).join('0').split('').map(parseFloat); //initialising to 0
+        rowsData.forEach(function(data){
+            _this.generateRow(data).appendTo(tbody);
+            _this.initialValues.push(data[1]); //pushes initial values before calculating retention. In fact calculating retention for these values
+        });
         var tableHeader = this.generateTableHeader(table);
         tableHeader.appendTo(table);
     };
@@ -328,6 +329,23 @@
         return table;
     };
 
+    /**
+     * Gives overall percentage of column
+     * @param value
+     * @param index, index of retention
+     */
+    Retention.prototype.getTotalPercentage = function (value, index) {
+        var total = 0;
+        var threshold = this.initialValues.length - index;
+        console.log(this.initialValues);
+        this.initialValues.forEach(function (data, i) {
+            if(i < threshold)
+                total += data;
+        });
+        console.log(total);
+        return this.getPercentage(total, value);
+    };
+
     Retention.prototype.generateTableHeader = function (table) {
         var tHead = $('<thead />').appendTo(table);
         var tHeadRow = $('<tr />', {
@@ -337,25 +355,24 @@
         var headerData = this.getHeaderData();
         var length = headerData.length;
         var _this = this;
-        var total = _this.headerValues[0]; //day0 count
         var td = "", span = "";
-        for(var key in headerData){
+        headerData.forEach(function(data, key){ //FIXME: no need to use headerData here
             td = $('<td />', {
                 class : function(){
                     return key > 0 ? "retention-cell head-clickable" : "retention-cell key-cell";
                 },
                 day : key-1,
-                text : headerData[key] + " "
+                text : data + " "
             }).appendTo(tHeadRow);
             if(key > 0) {
                 span = $('<span />', {
                     class: 'retention-badge badge-info',
                     text: function () {
-                        return _this.showValue? _this.headerValues[key-1] : _this.getPercentage(total, _this.headerValues[key-1]) + "%";
+                        return _this.showValue? _this.headerValues[key-1] : _this.getTotalPercentage(_this.headerValues[key-1], key-2) + "%";
                     }
                 }).appendTo(td);
             }
-        }
+        });
         $('.head-clickable .retention-cell').css('width', (85 / (length+1)) + '%');
         $('.retention-cell.key-cell').css('width', '15%');
         return tHead;

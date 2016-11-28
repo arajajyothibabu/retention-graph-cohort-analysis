@@ -1,5 +1,5 @@
 # Retention graph (Cohort analysis)
-Retention graph (Cohort Analysis) using Bootstrap ```(v0.1.5)```
+Retention graph (Cohort Analysis) using Bootstrap ```(v0.1.7)```
 
 
 ###Demo:
@@ -70,6 +70,10 @@ $(selector).retention(options);
 ```
 You can figure out :)
 ```
+
+###Release Notes
+**v0.1.7:** 
+    - Most of the issues fixed, Especially column header percentages.
 
 ###License
 It is available under the [MIT license](http://www.opensource.org/licenses/mit-license.php) as Bootstrap, Moment.js, DateRangePicker.js is included in this repository
