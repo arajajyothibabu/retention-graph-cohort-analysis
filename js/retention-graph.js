@@ -497,14 +497,14 @@
         var row = $('<tr />');
         var date = data[0];
         var dayCount = 0;
-        var count = data[1] || 1; //to handle divisionBy0
+        var count = data[1]; //|| 1; //to handle divisionBy0
         var td, div;
         var keysLength = _this.options[_this.currentSelected] + 2;
         var actualLength = data.length;
         for(var key = 0; key < keysLength; key++){
             if(key < actualLength) {
-                dayCount = _this.isActive ? data[key] : count - data[key];
-                _this.headerValues[key-1] += key == 1? count : dayCount;
+                dayCount = _this.isActive ? data[key] : (count - data[key]);
+                _this.headerValues[key-1] += (key == 1? count : dayCount);
                 var className = (key > 0 ? "retention-cell" + (key > 1 ? " clickable" : "") : "retention-date") + (" col" + (key - 1));
                 td = $('<td />', {
                     class: className,
