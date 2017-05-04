@@ -1,7 +1,7 @@
 # Retention graph (Cohort analysis)
 Retention graph (Cohort Analysis) using Bootstrap `(v0.1.8)`
 
-#### [Live Demo](http://arajajyothibabu.github.io/retention-graph-Cohort-analysis/)
+#### [Live Demo](http://arajajyothibabu.github.io/retention-graph-cohort-analysis/)
 
 ![alt tag](http://i.imgur.com/uJQTG1Q.png)
 
