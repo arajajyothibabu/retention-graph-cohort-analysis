@@ -49,3 +49,5 @@ export const HeaderLabelStyles = {
     padding: '0',
     margin: '0'
 };
+
+/*Styles*/

@@ -1,6 +1,6 @@
-# IntelliJ project files
 .idea
 *.iml
 out
 gen
+src
 node_modules

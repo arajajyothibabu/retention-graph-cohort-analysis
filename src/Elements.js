@@ -67,3 +67,34 @@ export const Table = (props, valueType) => {
     table.appendChild(Body(props.body, valueType));
     return table;
 };
+
+export const Container = (props, valueType) => { //TODO: wrapper container with controls
+    const {  } = props;
+
+    let container = document.createElement("div");
+    container.setAttribute('style', null);
+
+    let header = document.createElement("div");
+    header.setAttribute('style', null);
+    header.appendChild(title);
+
+    let title = document.createElement("p");
+    title.setAttribute('style', null);
+    title.setAttribute('title', props.title);
+
+    let controls = document.createElement("div");
+    header.setAttribute('style', null);
+    header.appendChild(title);
+
+    if(props.enableDateRange) {
+        let dateRange = document.createElement("a");
+        dateRange.setAttribute('type', "text");
+        dateRange.setAttribute('id', "retention-date-range");
+        dateRange.setAttribute('style', null);
+
+        let anchorWrapper = document.createElement("a");
+        anchorWrapper.setAttribute('style', null);
+        anchorWrapper.appendChild(dateRange);
+    }
+
+};

@@ -27,6 +27,8 @@ class CohortGraph {
         const { dataStore, currentType, valueType } = this;
         const headerData = dataStore.getHeader(currentType);
         const rowsData = dataStore.getRows(currentType);
+
+
         
     }
 
