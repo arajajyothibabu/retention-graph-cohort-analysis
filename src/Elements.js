@@ -7,8 +7,16 @@ import { VALUE_KEYS } from './constants';
 const { VALUE, PERCENT } = VALUE_KEYS;
 
 const renderValue = (props, valueType) => {
-    const {isTotal, isLabel, valueType} = props;
+    const {isTotal, isLabel} = props;
     return (isTotal || isLabel) ? props[VALUE] : (valueType === PERCENT ? `${props[PERCENT]} %` : props[VALUE]);
+};
+
+const appendStyles = (element, newStyles) => {
+    for(let style in newStyles) {
+        if(newStyles.hasOwnProperty(style)) {
+            element.style[style] = newStyles[style];
+        }
+    }
 };
 
 export const Th = (props, valueType) => {
@@ -17,9 +25,9 @@ export const Th = (props, valueType) => {
     let span = document.createElement("span");
     p.style = {...p.style, ...HeaderLabelStyles};
     p.innerHTML = props.label;
-    span.style = {...span.style, ...HeaderValueStyles};
+    appendStyles(span, HeaderValueStyles);
     span.innerHTML = renderValue(props, valueType);
-    div.style = {...div.style, ...TableCellStyles, backgroundColor: props.color};
+    appendStyles(div, {...TableCellStyles, backgroundColor: props.color});
     div.appendChild(p);
     div.appendChild(span);
     return div;
@@ -27,24 +35,24 @@ export const Th = (props, valueType) => {
 
 export const Td = (props, valueType) => {
     let div = document.createElement("div");
-    div.style = {...div.style, ...TableCellStyles, backgroundColor: props.color};
+    appendStyles(div, {...TableCellStyles, backgroundColor: props.color});
     div.setAttribute("title", `Out of ${props.total} on ${props.valueFor}`);
     div.innerHTML = renderValue(props, valueType);
     return div;
 };
 
 export const Tr = (props, valueType) => {
-    let tr = document.createElement("div");
-    tr.style = {...tr.style, ...TableRowStyles};
-    props.forEach(rowData => {
-        tr.appendChild(Td(props, valueType));
+    let div = document.createElement("div");
+    appendStyles(div, TableRowStyles);
+    props.forEach(cellData => {
+        div.appendChild(Td(cellData, valueType));
     });
-    return Tr;
+    return div;
 };
 
 export const Header = (props, valueType) => {
     let header = document.createElement("div");
-    header.style = {...header.style, ...TableHeaderStyles};
+    appendStyles(header, TableHeaderStyles);
     props.forEach(headerCellData => {
         header.appendChild(Th(headerCellData, valueType));
     });
@@ -53,7 +61,7 @@ export const Header = (props, valueType) => {
 
 export const Body = (props, valueType) => {
     let body = document.createElement("div");
-    body.style = {...body.style, ...TableBodyStyles};
+    appendStyles(body, TableBodyStyles);
     props.forEach(rowData => {
         body.appendChild(Tr(rowData, valueType));
     });
@@ -62,7 +70,7 @@ export const Body = (props, valueType) => {
 
 export const Table = (props, valueType) => {
     let table = document.createElement("div");
-    table.style = {...table.style, ...TableStyles};
+    appendStyles(table, TableStyles);
     table.appendChild(Header(props.header, valueType));
     table.appendChild(Body(props.body, valueType));
     return table;
