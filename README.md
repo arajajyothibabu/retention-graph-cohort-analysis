@@ -38,7 +38,7 @@ Cohort Analysis Graph
 ##### 3. DateRangePicker
 
 ### Input options:
-```
+```JSON
 {
     data : {
         days : {
