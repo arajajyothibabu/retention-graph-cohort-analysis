@@ -1,7 +1,34 @@
-# Retention graph (Cohort analysis)
-Retention graph (Cohort Analysis) using Bootstrap `(v0.1.8)`
+# Retention graph (Cohort analysis Graph)
+[![npm version](https://badge.fury.io/js/cohort-graph.svg)](https://badge.fury.io/js/cohort-graph)
+
+Cohort Analysis Graph
 
 #### [Live Demo](http://arajajyothibabu.github.io/retention-graph-cohort-analysis/)
+
+##### New Library without any external dependencies and handling only visual layer without controls for data
+
+#### Usage:
+    
+- install
+    
+        npm install --save cohort-graph
+        
+- usage
+
+        var cohortGraph = new CohortGraph(element, data, options);
+        
+        
+###### Working on options
+
+
+
+##### [React Version](https://apxor.github.io/react-cohort-graph/) of same Graph
+    
+    
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+
+### Outdated Library - found in folder old with options for controls
 
 ![alt tag](http://i.imgur.com/uJQTG1Q.png)
 
@@ -69,7 +96,7 @@ You can figure out :)
 ```
 
 ### Release Notes
-**v0.1.7:** 
+**v0.5.6:** 
     - Most of the issues fixed, Especially column header percentages.
 
 ### License

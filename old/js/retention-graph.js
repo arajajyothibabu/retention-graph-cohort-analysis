@@ -5,9 +5,9 @@
 (function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
+        define(['old/js/jquery'], factory);
     } else if (typeof exports !== 'undefined') {
-        module.exports = factory(require('jquery'));
+        module.exports = factory(require('old/js/jquery'));
     } else {
         factory(jQuery);
     }
