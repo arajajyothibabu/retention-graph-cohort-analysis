@@ -127,7 +127,7 @@ export default class DataStore {
                 largeRow.forEach((el, index) => {
                     if(index < 2) return;
                     const value = this._sumOfColumnWithIndex(this.store[key], index);
-                    const percent = this._getPercentage(this._sumOfFirstColumnUpToIndex(this.store[key], totalRows - index), value);
+                    const percent = this._getPercentage(this._sumOfFirstColumnUpToIndex(this.store[key], totalRows), value);
                     this.headers[key].push({
                         isHeader: true,
                         index: index,
@@ -183,7 +183,7 @@ export default class DataStore {
             try {
                 sum += arr[i][1].value;
             }catch(e){
-                sum += 0;
+                break;
             }
         }
         return sum;
